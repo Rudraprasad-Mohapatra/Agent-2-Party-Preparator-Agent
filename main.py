@@ -1,4 +1,4 @@
-from smolagents import CodeAgent, WebSearchTool, tool, InferenceClientModel
+from smolagents import CodeAgent, ToolCallingAgent, WebSearchTool, tool, InferenceClientModel
 from dotenv import load_dotenv
 import os
 
@@ -36,16 +36,39 @@ agent = CodeAgent(
     max_steps = 6
 )
 
-# ---- RUN ----
-result = agent.run("""
-plan a aparty at Wayne's mansion:
-1. Suggest a formal menu
-2. Find a good music playlist for the party
-3. Calculate total preparation time:
-    - drinks: 30 min
-    - decoration: 60 min
-    - menu: 45 min
-    - music: 45 min
-""")
+agent2 = ToolCallingAgent(tools=[WebSearchTool()], model=InferenceClientModel( model_id="meta-llama/Llama-3.1-70B-Instruct",token = HF_TOKEN),
+max_steps = 6
+)
 
-print(result)
+# ---- RUN ----
+# result = agent.run("""
+# Plan a party at Wayne's mansion:
+
+# 1. Suggest a formal menu
+# 2. Find a good music playlist for the party
+# 3. Calculate total preparation time:
+#     - drinks: 30 min
+#     - decoration: 60 min
+#     - menu: 45 min
+#     - music: 45 min
+# 4. If we start right now, at what time will the party be ready?
+
+# IMPORTANT:
+# - Do NOT print anything
+# - Do NOT explain
+# - Return ONLY valid JSON
+
+# Format:
+# {
+#   "menu": "...",
+#   "playlist": "...",
+#   "total_time": 0,
+#   "ready_at": "HH:MM"
+# }
+# """)
+
+# print(result)
+
+result2 = agent2.run("Search for the best music recommendations for a party at the Wayne's mansion.")
+
+print(result2)
