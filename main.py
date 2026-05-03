@@ -23,11 +23,34 @@ def suggest_menu(occasion: str) -> str:
     else:
         return "Custom menu"
 
+@tool
+def catering_service_tool(query: str) -> str:
+    """
+    This tool returns the highest rated catering service in Gotham City.
+
+    Args:
+        query: A search term for finding catering services.
+    """
+
+    # Example list of catering services & their ratings:
+    services = {
+        "Gotham Catering Co.": 4.9,
+        "Wayne Manor Catering": 4.8,
+        "Gotham City Events": 4.7,
+    }
+
+    # Find the highest rated catering service (simulating search query filtering)
+    best_service = max(services, key=services.get)
+
+    return best_service
+
+
 # ---- AGENT ----
 agent = CodeAgent(
     tools = [
         WebSearchTool(), # Music Web Search
-        suggest_menu
+        suggest_menu,
+        catering_service_tool
     ],
     model = InferenceClientModel(
         token = HF_TOKEN
@@ -69,6 +92,12 @@ max_steps = 6
 
 # print(result)
 
-result2 = agent2.run("Search for the best music recommendations for a party at the Wayne's mansion.")
+# result2 = agent2.run("Search for the best music recommendations for a party at the Wayne's mansion.")
 
-print(result2)
+# print(result2)
+
+# Run the agent to find the best catering service
+result3 = agent.run(
+    "Can you give me the name of the highest-rated catering service in Gotham City?"
+)
+print(result3) # Output: Gotham Catering Co.
